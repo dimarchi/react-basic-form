@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { API_KEY } from '../apikeys';
-import Graph from './graph';
+import { Line } from 'react-chartjs-2';
 
 let temps = [];
+let times = [];
 
 class CityForm extends Component {
 
@@ -50,8 +51,9 @@ class CityForm extends Component {
                 })
 
                 this.state.graph.map((measure => {
-                    temps.push(measure.main.temp)
-                    return measure.main.temp;
+                    temps.push(measure.main.temp);
+                    times.push(measure.dt_txt);
+                    return measure;
                 }))
 
                 this.setState({
@@ -61,6 +63,16 @@ class CityForm extends Component {
             .catch(error => {
                 console.log('get error: ', error);
             })
+        }
+    }
+
+    handleChart(chartData, chartDates) {
+        return {
+            labels : chartDates,
+            datasets : [{
+                data : [...chartData, 50, -50],
+                label : this.state.city
+            }]
         }
     }
 
@@ -92,8 +104,8 @@ class CityForm extends Component {
                         </form>
                     </div>
                     <div>
-                        <h1>The temperatures during the last 24 hours of measurements</h1>
-                        <Graph data={temps} />
+                        <h1>Weather forecast for the next 24 hours, temperatures in Celsius</h1>
+                        <Line data={this.handleChart(temps, times)} />
                     </div>
                 </div>
             )
