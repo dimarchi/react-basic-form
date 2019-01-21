@@ -61,7 +61,7 @@ class CityForm extends Component {
                 })
             })
             .catch(error => {
-                console.log('get error: ', error);
+                console.log(error);
             })
         }
     }
@@ -70,6 +70,7 @@ class CityForm extends Component {
         return {
             labels : chartDates,
             datasets : [{
+                tension : 0,
                 data : [...chartData, 50, -50],
                 label : this.state.city
             }]
